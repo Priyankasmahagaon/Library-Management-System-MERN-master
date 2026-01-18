@@ -11,7 +11,6 @@ import categoryRoutes from "./routes/categories.js";
 /* App Config */
 dotenv.config();
 const app = express();
-const port = process.env.PORT || 4000;
 
 /* Middlewares */
 app.use(express.json());
@@ -25,23 +24,21 @@ app.use("/api/transactions", transactionRoutes);
 app.use("/api/categories", categoryRoutes);
 
 /* MongoDB connection */
-mongoose.connect(
-  process.env.MONGO_URI,
-  {
-    useCreateIndex: true,
+mongoose
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  },
-  () => {
-    console.log("MONGODB CONNECTED");
-  }
-);
+  })
+  .then(() => console.log("MONGODB CONNECTED"))
+  .catch((err) => console.log("MongoDB ERROR:", err));
 
+/* Test Route */
 app.get("/", (req, res) => {
   res.status(200).send("Welcome to LibraryApp");
 });
 
-/* Port Listening In */
+/* Port Listening (Render FIXED) */
+const port = process.env.PORT;  // ❗ IMPORTANT FIX
 app.listen(port, () => {
-  console.log(`Server is running in PORT ${port}`);
+  console.log("Server running on Render PORT:", port);
 });
